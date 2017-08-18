@@ -6,36 +6,65 @@
         <script src="Chart.js"></script>
     </head>
     <body>
-        <div id="hdrbar">
-            <h1 align="center">Current drawn characteristic</h1>
+        <div id="aligned">
+            <div class="chart_container"">
+                <div id="hdrbar">
+                    <h1 align="center">Sample current drawn characteristic</h1>
 
-            <canvas id="myChart" width="1920" height="730"></canvas>
+                    <canvas id="chart_a" width="1920" height="370"></canvas>
+                </div>
+            </div>
+
+            <div class="chart_container"">
+                <div id="hdrbar">
+                    <h1 align="center">QA-ing board current drawn characteristic</h1>
+
+                    <canvas id="chart_b" width="1920" height="370"></canvas>
+                </div>
+            </div>
+
+
         </div>
 
         <script>
-            // Read in the .csv file
+            // Read in the sample.csv file
             const fs = require("fs");
-            var rs = fs.readFileSync("./curr_vs_pwm_id_0.csv").toString("utf-8").split("\n");
+            var rs1 = fs.readFileSync("./sample.csv").toString("utf-8").split("\n");
 
             // Got the file, start processing data
-            var output = [];
-            for (i = 1; i < rs.length; i++) {
-                var temp = rs[i].split(",");
+            var output1 = [];
+            for (i = 1; i < rs1.length; i++) {
+                var temp = rs1[i].split(",");
                 var obj = {
                     x: parseInt(temp[0]),
-                    y: parseInt(temp[2])
+                    y: parseInt(temp[1])
                 }
-                output.push(obj);
+                output1.push(obj);
             }
-            console.log(output);
+            console.log(output1);
+
+            // Read in the motorcurrent_trend.csv file
+            var rs2 = fs.readFileSync("./motorcurrent_trend.csv").toString("utf-8").split("\n");
+
+            // Got the file, start processing data
+            var output2 = [];
+            for (i = 1; i < rs2.length; i++) {
+                var temp = rs2[i].split(",");
+                var obj = {
+                    x: parseInt(temp[0]),
+                    y: parseInt(temp[1])
+                }
+                output2.push(obj);
+            }
+            console.log(output2);
 
 
-            var ctx = document.getElementById("myChart").getContext('2d');
-            var myChart = new Chart(ctx, {
+            var ctx = document.getElementById("chart_a").getContext('2d');
+            var chart_a = new Chart(ctx, {
                 type: 'scatter',
                 data: {
                     datasets: [{
-                        data: output,
+                        data: output1,
                         borderColor: "rgba(64, 66, 67,0.6)",
                         backgroundColor: "rgba(220,220,220,0)",
                         pointBorderColor: "rgba(64, 123, 160, 1)",
@@ -52,7 +81,53 @@
                         yAxes: [{
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Current drawn (mA)',
+                                labelString: 'Raw ADC reading',
+                                fontSize: 14,
+                                fontStyle: 'bold'
+                            },
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'PWM in 10-bit space',
+                                fontSize: 14,
+                                fontStyle: 'bold'
+                            },
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }],
+                        
+                    }
+                }
+            });
+
+            var ctx = document.getElementById("chart_b").getContext('2d');
+            var chart_b = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        data: output2,
+                        borderColor: "rgba(64, 66, 67,0.6)",
+                        backgroundColor: "rgba(220,220,220,0)",
+                        pointBorderColor: "rgba(64, 123, 160, 1)",
+                        pointBackgroundColor: "rgba(64, 123, 160, 1)",
+                        pointBorderWidth: "1",
+                        borderWidth: "1"
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Raw ADC reading',
                                 fontSize: 14,
                                 fontStyle: 'bold'
                             },
