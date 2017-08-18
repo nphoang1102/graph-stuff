@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- <title>Current drawn characteristic</title>s -->
+        <title>Current drawn characteristic</title>
+        <link rel="stylesheet" href="style.css"></style>
         <script src="Chart.js"></script>
     </head>
     <body>
+        <div id="hdrbar">
+            <h1 align="center">Current drawn characteristic</h1>
 
-        <canvas id="myChart" width="1920" height="1080"></canvas>
+            <canvas id="myChart" width="1920" height="730"></canvas>
+        </div>
 
         <script>
             // Read in the .csv file
@@ -14,49 +18,61 @@
             var rs = fs.readFileSync("./curr_vs_pwm_id_0.csv").toString("utf-8").split("\n");
 
             // Got the file, start processing data
-            var x_axis = [];
-            var y_axis = [];
+            var output = [];
             for (i = 1; i < rs.length; i++) {
                 var temp = rs[i].split(",");
-                x_axis.push(temp[0]);
-                y_axis.push(temp[2]);
+                var obj = {
+                    x: parseInt(temp[0]),
+                    y: parseInt(temp[2])
+                }
+                output.push(obj);
             }
+            console.log(output);
 
 
             var ctx = document.getElementById("myChart").getContext('2d');
             var myChart = new Chart(ctx, {
-                type: 'line',
+                type: 'scatter',
                 data: {
-                    labels: x_axis,
                     datasets: [{
                         label: 'Current drawn in mA',
-                        data: y_axis,
-                        backgroundColor: [
-                            // 'rgba(255, 99, 132, 0.2)',
-                            // 'rgba(54, 162, 235, 0.2)',
-                            // 'rgba(255, 206, 86, 0.2)',
-                            // 'rgba(75, 192, 192, 0.2)',
-                            // 'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            // 'rgba(255,99,132,1)',
-                            // 'rgba(54, 162, 235, 1)',
-                            // 'rgba(255, 206, 86, 1)',
-                            // 'rgba(75, 192, 192, 1)',
-                            // 'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
+                        data: output,
+                        borderColor: "rgba(64, 66, 67,0.6)",
+                        backgroundColor: "rgba(220,220,220,0)",
+                        pointBorderColor: "rgba(64, 123, 160, 1)",
+                        pointBackgroundColor: "rgba(64, 123, 160, 1)",
+                        pointBorderWidth: "1",
+                        borderWidth: "1"
                     }]
                 },
                 options: {
+                    legend: {
+                        display: false,
+                    },
                     scales: {
                         yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Current drawn (mA)',
+                                fontSize: 14,
+                                fontStyle: 'bold'
+                            },
                             ticks: {
                                 beginAtZero:true
                             }
-                        }]
+                        }],
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'PWM in 10-bit space',
+                                fontSize: 14,
+                                fontStyle: 'bold'
+                            },
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }],
+                        
                     }
                 }
             });

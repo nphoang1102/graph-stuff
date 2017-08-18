@@ -1,0 +1,14 @@
+@font-face {
+    font-family: open-sans;
+    src: url(OpenSans-Light.ttf);
+}
+
+body {
+
+	margin: 0;
+	padding: 0;
+
+	background-color: #E6FBF9;
+	font-family: open-sans, sans-serif;
+}
+
