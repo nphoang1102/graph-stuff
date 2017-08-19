@@ -9,20 +9,21 @@
         <div id="aligned">
             <div class="chart_container"">
                 <div id="hdrbar">
-                    <h1 align="center">Sample current drawn characteristic</h1>
+                    <h3 align="center">Sample current drawn characteristic</h3>
 
-                    <canvas id="chart_a" width="1920" height="370"></canvas>
+                    <canvas id="chart_a" width="1860" height="300"></canvas>
                 </div>
             </div>
 
             <div class="chart_container"">
                 <div id="hdrbar">
-                    <h1 align="center">QA-ing board current drawn characteristic</h1>
+                    <h3 align="center">QA-ing board current drawn characteristic</h3>
 
-                    <canvas id="chart_b" width="1920" height="370"></canvas>
+                    <canvas id="chart_b" width="1860" height="300"></canvas>
                 </div>
             </div>
 
+            <p id="result"></p>
 
         </div>
 
@@ -57,6 +58,28 @@
                 output2.push(obj);
             }
             console.log(output2);
+
+            // Check if we pass QA
+            var pass = true;
+            for (i = 0; i < output1.length; i++) {
+                var check = Math.abs(output1[i].y - output2[i].y);
+                console.log(check);
+                if (check > 80) {
+                    pass = false;
+                    break;
+                }
+            }
+            console.log("Pass QA:", pass);
+
+            // Print data to html5 screen
+            if (pass) {
+                document.getElementById("result").style.color = "#008000"
+                document.getElementById("result").innerHTML = "Board passed current QA";
+            }
+            else {
+                document.getElementById("result").style.color = "#b30000"
+                document.getElementById("result").innerHTML = "Board failed current QA";
+            }
 
 
             var ctx = document.getElementById("chart_a").getContext('2d');

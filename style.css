@@ -9,6 +9,12 @@ body {
 	padding: 0;
 
 	background-color: #F0FFFE;
-	font-family: open-sans, sans-serif;
 }
 
+#result {
+	font-family: open-sans;
+	text-align: left;
+	font-weight: bolder;
+	font-size: 200%;
+	padding: 40px;
+}
